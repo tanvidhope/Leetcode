@@ -1,19 +1,15 @@
 class Solution:
     def isZeroArray(self, nums: List[int], queries: List[List[int]]) -> bool:
-        startIndices, endIndices = [], []
+        #difference Array
+        diff = [0]*len(nums)
         for query in queries:
-            startIndices.append(query[0])
-            endIndices.append(query[1])
-        startIndices.sort()
-        endIndices.sort()
-        i, j = 0,0
-        maxTransform = 0
-        for x in range(len(nums)):
-            while i<len(startIndices) and startIndices[i] == x:
-                maxTransform+=1
-                i+=1
-            while j< len(endIndices) and endIndices[j] == x-1:
-                maxTransform-=1
-                j+=1
-            nums[x] = max(nums[x]-maxTransform, 0)
-        return sum(nums) == 0
+            if query[0]<len(nums):
+                diff[query[0]]+=1
+            if query[1]+1<len(nums):
+                diff[query[1]+1]-=1
+
+        for i in range(len(nums)):
+            diff[i]+=diff[i-1] if i>0 else 0
+            if nums[i]-diff[i]>0:
+                return False
+        return True
