@@ -1,20 +1,26 @@
+class DSU:
+    def __init__(self, n):
+        self.parent= [i for i in range(n+1)]
+        self.n = n
+    
+    def find(self, u):
+        if self.parent[u]!= u:
+            self.parent[u] = self.find(self.parent[u])
+        return self.parent[u]
+    
+    def union(self, u, v):
+        par1 = self.find(u)
+        par2 = self.find(v)
+        if par1 == par2:
+            return False
+        self.parent[par2] = par1
+        return True
+
 class Solution:
     def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
-        # O(n2) TC
-        def dfs(u,v):
-            if u==v:
-                return True
-            for neighbour in graph[u]:
-                if neighbour not in seen:
-                    seen.add(neighbour)
-                    if dfs(neighbour, v):
-                        return True
-            return False
-
-        graph = defaultdict(set)
+        # DSU
+        dsu = DSU(1000)
         for u,v in edges:
-            seen = set()
-            if u in graph and v in graph and dfs(u,v):
-                return u,v
-            graph[u].add(v)
-            graph[v].add(u)
+            if not dsu.union(u,v):
+                return [u,v]
+        return []
