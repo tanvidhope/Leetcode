@@ -1,12 +1,14 @@
 class Solution:
     def removeDuplicateLetters(self, s: str) -> str:
-        freq = Counter(s)
-        leftmost = 0
+        # keep mono stack, remove letter in stack if its greater than current letter and
+        # there is another occurence of the letter later on
+        lastOccurence = {c:i for i, c in enumerate(s)}
+        stack = []
+        seen = set()
         for i in range(len(s)):
-            if s[i] < s[leftmost]:
-                leftmost = i
-            freq[s[i]]-=1
-            if freq[s[i]] ==0:
-                break
-        # remove further occurences of s as well
-        return s[leftmost] + self.removeDuplicateLetters(s[leftmost:].replace(s[leftmost], "")) if s else ""
+            if s[i] not in seen:
+                while stack and stack[-1] > s[i] and i<lastOccurence[stack[-1]]:
+                    seen.remove(stack.pop())
+                stack.append(s[i])
+                seen.add(s[i])
+        return ''.join(stack)
