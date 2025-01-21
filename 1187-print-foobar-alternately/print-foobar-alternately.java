@@ -1,29 +1,31 @@
 class FooBar {
     private int n;
-    Semaphore foo = new Semaphore(0);
-    Semaphore bar = new Semaphore(1);
+    Semaphore foo;
+    Semaphore bar;
 
     public FooBar(int n) {
         this.n = n;
+        foo = new Semaphore(1);
+        bar = new Semaphore(0);
     }
 
     public void foo(Runnable printFoo) throws InterruptedException {
         
         for (int i = 0; i < n; i++) {
-            bar.acquire();
+            foo.acquire();
         	// printFoo.run() outputs "foo". Do not change or remove this line.
         	printFoo.run();
-            foo.release();
+            bar.release();
         }
     }
 
     public void bar(Runnable printBar) throws InterruptedException {
         
         for (int i = 0; i < n; i++) {
-            foo.acquire();
+            bar.acquire();
             // printBar.run() outputs "bar". Do not change or remove this line.
         	printBar.run();
-            bar.release();
+            foo.release();
         }
     }
 }
