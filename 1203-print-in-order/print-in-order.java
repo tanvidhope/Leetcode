@@ -1,27 +1,32 @@
 class Foo {
-    Semaphore run2, run3;
+    Semaphore s1;
+    Semaphore s2;
+    Semaphore s3;
+
     public Foo() {
-        run2 = new Semaphore(0);
-        run3 = new Semaphore(0);
+        s1 = new Semaphore(1);
+        s2 = new Semaphore(0);
+        s3 = new Semaphore(0);
     }
 
     public void first(Runnable printFirst) throws InterruptedException {
-        
+        s1.acquire();
         // printFirst.run() outputs "first". Do not change or remove this line.
         printFirst.run();
-        run2.release();
+        s2.release();
     }
 
     public void second(Runnable printSecond) throws InterruptedException {
-        run2.acquire();
+        s2.acquire();
         // printSecond.run() outputs "second". Do not change or remove this line.
         printSecond.run();
-        run3.release();
+        s3.release();
     }
 
     public void third(Runnable printThird) throws InterruptedException {
-        run3.acquire();
+        s3.acquire();
         // printThird.run() outputs "third". Do not change or remove this line.
         printThird.run();
+        s3.release();
     }
 }
