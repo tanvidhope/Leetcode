@@ -1,16 +1,18 @@
 class StockSpanner:
-    
+
     def __init__(self):
-        #monotonic stack
-        self.stack = []    
+        self.stack = []
 
     def next(self, price: int) -> int:
-        # have to push in 2 things, (the val, and the ans)
-        ans = 1
+        if not self.stack:
+            self.stack.append((price, 1))
+            return 1
+        days = 1
         while self.stack and self.stack[-1][0] <= price:
-            ans+=self.stack.pop()[1]
-        self.stack.append([price, ans])
-        return ans
+            days+= self.stack.pop()[1]
+        self.stack.append((price, days))
+        return days
+
 
 
 # Your StockSpanner object will be instantiated and called as such:
