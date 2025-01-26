@@ -1,20 +1,19 @@
 class Solution:
     def longestIncreasingPath(self, matrix: List[List[int]]) -> int:
-        m,n=len(matrix), len(matrix[0])
-        maxLen = 0
+        m, n = len(matrix), len(matrix[0])
+        maxCount = 0
         memo = {}
         for i in range(m):
             for j in range(n):
-                maxLen = max(maxLen, self.dfs(matrix, i,j,m,n, -1, memo))
-        return maxLen
-        
-    def dfs(self, matrix, i,j, m,n, prev, memo):
-        if i<0 or j<0 or i>=m or j>=n or matrix[i][j] <=prev:
-            return 0
+                maxCount = max(maxCount, self.dfs(matrix, i, j, m, n, memo))
+        return maxCount+1
+
+    def dfs(self, matrix, i, j, m, n, memo):
+        neighbours = {(i+1, j), (i-1, j), (i, j+1), (i, j-1)}
         if (i,j) not in memo:
-            maxLen = 0
-            neighbours={(i+1, j), (i, j+1), (i-1, j), (i, j-1)}
+            maxCount = 0
             for newi, newj in neighbours:
-                maxLen = max(maxLen, self.dfs(matrix, newi, newj, m, n, matrix[i][j], memo))
-            memo[(i,j)] = 1+maxLen
+                if 0<=newi<m and 0<=newj<n and matrix[newi][newj]>matrix[i][j]:
+                    maxCount = max(maxCount, 1+self.dfs(matrix, newi, newj, m, n, memo))
+            memo[(i,j)] = maxCount
         return memo[(i,j)]
