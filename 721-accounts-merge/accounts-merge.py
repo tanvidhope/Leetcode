@@ -1,28 +1,29 @@
 class Solution:
     def accountsMerge(self, accounts: List[List[str]]) -> List[List[str]]:
-        map = {}
+        accountToName = defaultdict(set)
         graph = defaultdict(set)
-        visited = set()
         for account in accounts:
-            for i in range(1, len(account)):
-                map[account[i]] = account[0]
-                if i>1:
-                    graph[account[i]].add(account[1])
-                    graph[account[1]].add(account[i])
+            for email in account[1:]:
+                accountToName[email] = account[0]
+                if email!=account[1]:
+                    graph[email].add(account[1])
+                    graph[account[1]].add(email)
+        visited = set()
         ans = []
-        for key in map:
-            if key not in visited:
-                visited.add(key)
-                lst = self.dfs(key, visited, graph, [])
-                temp = [key]+lst.copy()
-                temp.sort()
-                ans.append([map[key]]+temp)
+        for account in list(accountToName):
+            if account not in visited:
+                lst = []
+                temp = [accountToName[account]]
+                self.dfs(graph, account, visited, lst)
+                temp.extend(sorted(lst.copy()))
+                ans.append(temp)
         return ans
 
-    def dfs(self, key, visited, graph, lst):
-        for neighbour in graph[key]:
-            if neighbour not in visited:
-                visited.add(neighbour)
-                lst.append(neighbour)
-                lst = self.dfs(neighbour, visited, graph, lst)
-        return lst
+    def dfs(self, graph, account, visited, lst):
+        if account not in visited:
+            visited.add(account)
+            lst.append(account)
+            for neighbour in graph[account]:
+                self.dfs(graph, neighbour, visited, lst)
+        
+        
