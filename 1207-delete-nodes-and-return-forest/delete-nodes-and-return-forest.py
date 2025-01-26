@@ -6,22 +6,22 @@
 #         self.right = right
 class Solution:
     def delNodes(self, root: Optional[TreeNode], to_delete: List[int]) -> List[TreeNode]:
+        self.ans = []
         toDelete = set(to_delete)
-        forest = []
-        root = self.process(root, toDelete, forest)
+        root = self.dfs(root, toDelete)
         if root:
-            forest.append(root)
-        return forest
+            self.ans.append(root)
+        return self.ans
     
-    def process(self, node, toDelete, forest):
-        if not node:
+    def dfs(self, root, toDelete):
+        if not root:
+            return
+        root.left = self.dfs(root.left, toDelete)
+        root.right = self.dfs(root.right, toDelete)
+        if root.val in toDelete:
+            if root.left:
+                self.ans.append(root.left)
+            if root.right:
+                self.ans.append(root.right)
             return None
-        node.left = self.process(node.left, toDelete, forest)
-        node.right = self.process(node.right, toDelete, forest)
-        if node.val in toDelete:
-            if node.left:
-                forest.append(node.left)
-            if node.right:
-                forest.append(node.right)
-            return None
-        return node
+        return root
