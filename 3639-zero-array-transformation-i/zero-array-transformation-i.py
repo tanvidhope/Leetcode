@@ -1,15 +1,15 @@
 class Solution:
     def isZeroArray(self, nums: List[int], queries: List[List[int]]) -> bool:
-        #difference Array
-        diff = [0]*len(nums)
-        for query in queries:
-            if query[0]<len(nums):
-                diff[query[0]]+=1
-            if query[1]+1<len(nums):
-                diff[query[1]+1]-=1
-
-        for i in range(len(nums)):
-            diff[i]+=diff[i-1] if i>0 else 0
-            if nums[i]-diff[i]>0:
+        n = len(nums)
+        differenceArray = [0]*n
+        for left, right in queries:
+            differenceArray[left]+=1
+            if right +1<n:
+                differenceArray[right+1]-=1
+        for i in range(1,n):
+            differenceArray[i]+=differenceArray[i-1]
+        
+        for i in range(n):
+            if nums[i] -differenceArray[i] >0:
                 return False
         return True
